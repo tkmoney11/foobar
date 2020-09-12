@@ -186,8 +186,13 @@ public class main {
         //                                                                     {10, 1, 0, 10, 10},
         //                                                                     {10, 1, 10, 0, 10},
         //                                                                     {10, 10, 10, 10, 0}}, 7)));
-        System.out.println(Solution9.solution(new boolean[][] {{true, false, true},
-                                                               {false, true, false},
-                                                               {true, false, true}}));
+        // System.out.println(Solution9.solution(new boolean[][] {{true, false, true},
+        //                                                        {false, true, false},
+        //                                                        {true, false, true}}));
+        System.out.println(Solution9.solution(new boolean[][] {{true, false, true, false, false, true, true, true},
+                                                               {true, false, true, false, false, false, true, false},
+                                                               {true, true, true, false, false, false, true, false},
+                                                               {true, false, true, false, false, false, true, false},
+                                                               {true, false, true, false, false, true, true, true}}));
     }
 }
