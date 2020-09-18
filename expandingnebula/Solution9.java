@@ -1,86 +1,131 @@
 package expandingnebula;
+
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Set;
 
 public class Solution9 {
-    public static class RuleSet {
-        public static void ruleGetter(int i, boolean[] col, boolean[][] biggerCol, int lvl) {
-            if (i == 0) ruleZero(col, biggerCol, lvl);
-            if (i == 1) ruleOne(col, biggerCol, lvl);
-            if (i == 2) ruleTwo(col, biggerCol, lvl);
-            if (i == 3) ruleThree(col, biggerCol, lvl);
-        }
+    /**
+     * TRUE PREDECESSOR GRIDS:
+     *   -----   -----   -----   -----
+     *  | T F | | F T | | F F | | F F |
+     *  | F F | | F F | | T F | | F T |
+     *   -----   -----   -----   -----
+     *    "1"     "2"     "3"     "4" 
+     * FALSE PREDECESSOR GRIDS:
+     *   -----   -----   -----   -----   -----   -----
+     *  | F F | | T F | | F T | | T T | | F T | | F F |
+     *  | F F | | F T | | T F | | F F | | F T | | T T |
+     *   -----   -----   -----   -----   -----   ----- 
+     *    "a"     "b"     "c"     "d"     "e"     "f"
+     *   -----   -----   -----   -----   -----   ----- 
+     *  | T F | | T F | | T T | | T T | | F T | | T T |
+     *  | T F | | T T | | T F | | F T | | T T | | T T |
+     *   -----   -----   -----   -----   -----   -----
+     *    "g"     "h"     "i"     "j"     "k"     "l"
+     */
 
-        public static void ruleReverser(int i, boolean[][] biggerCol, int lvl) {
-            if (i == 0) biggerCol[lvl][0] = false;
-            if (i == 1) biggerCol[lvl+1][0] = false;
-            if (i == 2) biggerCol[lvl][1] = false;
-            if (i == 3) biggerCol[lvl+1][1] = false;
-        }
 
-
-
-        /**
-         * 
-         * @param col - Current State. 1d column
-         * @param biggerCol - Previous state, 2d column
-         * @param lvl - current level of evaluation
-         */
-        public static void ruleZero(boolean[] col, boolean[][] biggerCol, int lvl) {
-            biggerCol[lvl][0] = true;
-        }
-
-        // rule 1: bottom cell
-        public static void ruleOne(boolean[] col, boolean[][] biggerCol, int lvl) {
-            biggerCol[lvl+1][0] = true;    
-        }
-
-        // rule 2: right cell
-        public static void ruleTwo(boolean[] col, boolean[][] biggerCol, int lvl) {    
-            biggerCol[lvl][1] = true;
-        }
-
-        // rule 3: right and bottom cell
-        public static void ruleThree(boolean[] col, boolean[][] biggerCol, int lvl) {
-            biggerCol[lvl+1][1] = true;
-        }
-
-        private static boolean isEmpty(boolean[][] biggerCol, int lvl) {
-            if (biggerCol[lvl][0]) return false;
-            if (biggerCol[lvl][1]) return false;
-            if (biggerCol[lvl+1][0]) return false;
-            if (biggerCol[lvl+1][1]) return false;
-            // System.out.println("is empty");
-            return true;
-        }
-    }
+    public static final HashMap<String, String[]> TRUE_TRUE = new HashMap<>() {{
+        put("1", new String[] {"3","4"});
+        put("2",  new String[] {"3","4"});
+        put("3",  new String[] {"1"});
+        put("4",  new String[] {"2"});
+    }};
+    public static final HashMap<String, String[]> TRUE_FALSE = new HashMap<>() {{
+        put("1", new String[] {"a","f"});
+        put("2",  new String[] {"a","f"});
+        put("3",  new String[] {"b","g","h"});
+        put("4",  new String[] {"c","e","k"});
+    }};
+    public static final HashMap<String, String[]> FALSE_TRUE = new HashMap<>() {{
+        put("a", new String[] {"3","4"});
+        put("b",  new String[] {"2"});
+        put("c",  new String[] {"1"});
+        put("d",  new String[] {"3","4"});
+        put("e",  new String[] {"2"});
+        put("f",  new String[] {});
+        put("g",  new String[] {"1"});
+        put("h",  new String[] {});
+        put("i",  new String[] {"1"});
+        put("j",  new String[] {"2"});
+        put("k",  new String[] {});
+        put("l",  new String[] {});
+    }};
+    public static final HashMap<String, String[]> FALSE_FALSE = new HashMap<>() {{
+        put("a", new String[] {"a","f"});
+        put("b",  new String[] {"c","e","k"});
+        put("c",  new String[] {"b","g","h"});
+        put("d",  new String[] {"a","f"});
+        put("e",  new String[] {"c","e","k"});
+        put("f",  new String[] {"d","i","j","l"});
+        put("g",  new String[] {"b","g","h"});
+        put("h",  new String[] {"d","i","j","l"});
+        put("i",  new String[] {"b","g","h"});
+        put("j",  new String[] {"c","e","k"});
+        put("k",  new String[] {"d","i","j","l"});
+        put("l",  new String[] {"d","i","j","l"});
+    }};
 
     public static int solution(boolean[][] g) {
         // Your code here
-        for (int i = 0; i < g.length; i++) {
-            System.out.println(Arrays.toString(g[i]));
+        // for (int i = 0; i < g.length; i++) {
+        //     System.out.println(Arrays.toString(g[i]));
+        // }
+        // System.out.println();
+        ArrayList<HashSet<ArrayList<String>>> setList = new ArrayList<>();
+        for (int i = 0; i < g[0].length; i++) { // g[0].length
+            setList.add(new HashSet<ArrayList<String>>());
+            enumerateSinglePredecessors(g, setList, i, 0);
         }
-        Queue<boolean[][]> q = new LinkedList<>();
-        boolean[] col = fillSingleColFromGraph(g, 0);
-        enumerateSinglePredecessors(col, 0, q, new boolean[col.length + 1][2]);
-
-        // for (boolean[][] bigCol : q) {
-        //     for (int i = 0; i < bigCol.length; i++) {
-        //         System.out.println(Arrays.toString(bigCol[i]));
+        // for (int i = 0; i < setList.size(); i++) {
+        //     System.out.println(setList.get(i).size());
+        // }
+        // for (ArrayList<ArrayList<Boolean>> bools: setList.get(1)) {
+        //     System.out.println(bools);
+        // }
+        // System.out.println(setList.get(0).size());
+        // System.out.println(setList.get(1).size());
+        // System.out.println(setList.get(2).size());
+        // for (HashSet<ArrayList<ArrayList<Boolean>>> set : setList) {
+        //     for (ArrayList<ArrayList<Boolean>> bools : set) {
+        //         System.out.println(bools);
         //     }
         //     System.out.println();
         // }
+        // find valid grids
+        return findValidGrids();
+    }
 
-        // fillColFromGraph(col, g, 1);
-        // enumeratePredecessors(col, 0);
-        // System.out.println();
-        // fillColFromGraph(col, g, 2);
-        // enumeratePredecessors(col, 0);
-        // System.out.println();
-        return q.size();
+    public static int findValidGrids() {
+        return 1;
+        // if (lvl == len) {
+        //     return 1;
+        // } else {
+        //     int count = 0;
+        //     for (ArrayList<ArrayList<Boolean>> bigCol2 : setList.get(lvl)) {
+        //         // System.out.println(bigCol2);
+        //         if (isValidPair(bigCol, bigCol2)) {
+        //             count += findValidGrids(setList, bigCol2, lvl+1, len);
+        //         }
+        //     }
+
+        //     return count;
+        // }
+    }
+
+    public static boolean isValidPair(ArrayList<ArrayList<Boolean>> bigCol, ArrayList<ArrayList<Boolean>> bigCol2) {
+        if (bigCol.size() == 0) return true; // only true for first iteration
+
+        for (int i = 0; i < bigCol.size(); i++) {
+            if (bigCol.get(i).get(1) != bigCol2.get(i).get(0)) return false;
+        }
+
+        return true;
     }
 
     // enumerate predecessors. (takes in graph)
@@ -91,38 +136,48 @@ public class Solution9 {
         // function that handles it by rule
         // function that handles by cell
 
-    // TODO stop condition: gardenOfEden? No predecessor states. Might be able to compare size of set.
+        // for (int i = 0; i < 4; i++) {
+        //     ArrayList<ArrayList<Boolean>> biggerColCopy = new ArrayList<>();
+        //     copyArrayList(biggerColCopy, biggerCol);
+        //     RuleSet.ruleGetter(i, col, biggerColCopy, lvl);
+        //     enumerateSinglePredecessors(col, lvl+1, s, biggerColCopy);
+        // }
+    // TODO add print statements
     // element by element
-    private static void enumerateSinglePredecessors(boolean[] col, int lvl, Queue<boolean[][]> q, boolean[][] biggerCol) {
-        if (lvl == col.length) {
-            // for (int j = 0; j < biggerCol.length; j++) {
-            //     System.out.println(Arrays.toString(biggerCol[j]));
-            // }
-            // System.out.println();
-            q.add(biggerCol);
-            boolean[] newCol = fillSingleColFromGraph(biggerCol, 0);
-            // enumerateSinglePredecessors(newCol, 0, q, new boolean[col.length + 1][2]);
-        } else {
-            // System.out.println("lvl: " + lvl);
-            // System.out.println(Arrays.toString(biggerCol[lvl]));
-            // System.out.println(Arrays.toString(biggerCol[lvl+1]));
-            System.out.println();
-            
-            System.out.println();
-            // System.out.println(Arrays.toString(biggerCol[lvl]));
-            if (RuleSet.isEmpty(biggerCol, lvl)){
-                for (int i = 0; i < 4; i++) {
-                    boolean[][] biggerColCopy = new boolean[biggerCol.length][2];
-                    copyArray(biggerColCopy, biggerCol);
-                    if (col[lvl]) {
-                        // for (int j = 0; j < biggerCol.length; j++) {
-                        //     System.out.println(Arrays.toString(biggerCol[j]));
-                        // }
-                        RuleSet.ruleGetter(i, col, biggerColCopy, lvl);
-                    }
-                    enumerateSinglePredecessors(col, lvl+1, q, biggerColCopy);
+    // TODO FINISH THIS BOIIII
+    private static void enumerateSinglePredecessors(boolean[][] g, ArrayList<HashSet<ArrayList<String>>> setList, int colNum, int lvl) {
+        if (lvl == 0) {
+            // current state current level has gas, ALL TRUE STATES
+            if (g[colNum][lvl]) {
+                for (String trueState : TRUE_TRUE.keySet()) {
+                    setList.get(colNum).add(new ArrayList<String>(Arrays.asList(trueState)));
+                    // System.out.println(setList.get(colNum));
+                }
+                System.out.println(setList.get(colNum));
+                enumerateSinglePredecessors(g, setList, colNum, lvl+1);
+            // current state current level does not have gas, ALL FALSE STATES
+            } else {
+                for (String falseState : FALSE_FALSE.keySet()) {
+                    setList.get(colNum).add(new ArrayList<String>(Arrays.asList(falseState)));
+                }
+                System.out.println(setList.get(colNum));
+                enumerateSinglePredecessors(g, setList, colNum, lvl+1);
+            }
+        } else if (lvl < g.length) {
+            if(g[colNum][lvl]) {
+                if (g[colNum][lvl-1]) {
+
+                } else {
+
+                }
+            } else {
+                if (g[colNum][lvl-1]) {
+
+                } else {
+                    
                 }
             }
+            enumerateSinglePredecessors(g, setList, colNum, lvl+1);
         }
     }
 
@@ -135,10 +190,21 @@ public class Solution9 {
                 //     System.out.println(Arrays.toString(biggerColCopy[j]));
                 // }
 
-    public static void copyArray(boolean[][] biggerColCopy, boolean[][] biggerCol) {
-        for (int i = 0; i < biggerCol.length; i++) {
-            for (int j = 0; j < biggerCol[0].length; j++) {
-                biggerColCopy[i][j] = biggerCol[i][j];
+    public static void fillEmptyBigCol(ArrayList<ArrayList<Boolean>> emptyBigCol, int len) {
+        for (int i = 0; i < len + 1; i++) {
+            emptyBigCol.add(new ArrayList<>());
+            for (int j = 0; j < 2; j++) {
+                emptyBigCol.get(i).add(false);
+            }
+        }
+        // System.out.println(emptyBigCol);
+    }
+
+    public static void copyArrayList(ArrayList<ArrayList<Boolean>> biggerColCopy, ArrayList<ArrayList<Boolean>> biggerCol) {
+        for (int i = 0; i < biggerCol.size(); i++) {
+            biggerColCopy.add(new ArrayList<Boolean>());
+            for (int j = 0; j < 2; j++) {
+                biggerColCopy.get(i).add(biggerCol.get(i).get(j));
             }
         }
     }
@@ -149,10 +215,10 @@ public class Solution9 {
         }
     }
 
-    private static boolean[] fillSingleColFromGraph(boolean[][] g, int j) {
-        boolean[] col = new boolean[g.length];
-        for (int i = 0; i < col.length; i++) {
-            col[i] = g[i][j];
+    private static ArrayList<Boolean> fillSingleColFromGraph(boolean[][] g, int j) {
+        ArrayList<Boolean> col = new ArrayList<Boolean>();
+        for (int i = 0; i < g.length; i++) {
+            col.add(g[i][j]);
         }
         return col;
     }
