@@ -1,12 +1,10 @@
 package expandingnebula;
 
 import java.util.Arrays;
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.Queue;
-import java.util.Set;
+import java.util.Hashtable;
+import java.util.Map;
 
 public class Solution9 {
     /**
@@ -30,196 +28,193 @@ public class Solution9 {
      */
 
 
-    public static final HashMap<String, String[]> TRUE_TRUE = new HashMap<>() {{
-        put("1", new String[] {"3","4"});
-        put("2",  new String[] {"3","4"});
-        put("3",  new String[] {"1"});
-        put("4",  new String[] {"2"});
-    }};
-    public static final HashMap<String, String[]> TRUE_FALSE = new HashMap<>() {{
-        put("1", new String[] {"a","f"});
-        put("2",  new String[] {"a","f"});
-        put("3",  new String[] {"b","g","h"});
-        put("4",  new String[] {"c","e","k"});
-    }};
-    public static final HashMap<String, String[]> FALSE_TRUE = new HashMap<>() {{
-        put("a", new String[] {"3","4"});
-        put("b",  new String[] {"2"});
-        put("c",  new String[] {"1"});
-        put("d",  new String[] {"3","4"});
-        put("e",  new String[] {"2"});
-        put("f",  new String[] {});
-        put("g",  new String[] {"1"});
-        put("h",  new String[] {});
-        put("i",  new String[] {"1"});
-        put("j",  new String[] {"2"});
-        put("k",  new String[] {});
-        put("l",  new String[] {});
-    }};
-    public static final HashMap<String, String[]> FALSE_FALSE = new HashMap<>() {{
-        put("a", new String[] {"a","f"});
-        put("b",  new String[] {"c","e","k"});
-        put("c",  new String[] {"b","g","h"});
-        put("d",  new String[] {"a","f"});
-        put("e",  new String[] {"c","e","k"});
-        put("f",  new String[] {"d","i","j","l"});
-        put("g",  new String[] {"b","g","h"});
-        put("h",  new String[] {"d","i","j","l"});
-        put("i",  new String[] {"b","g","h"});
-        put("j",  new String[] {"c","e","k"});
-        put("k",  new String[] {"d","i","j","l"});
-        put("l",  new String[] {"d","i","j","l"});
-    }};
+    public static final Map<String, String[]> TRUE_TRUE; 
+    static{
+        Hashtable<String, String[]> tmp = new Hashtable<>();
+        tmp.put("1", new String[] {"3","4"});
+        tmp.put("2",  new String[] {"3","4"});
+        tmp.put("3",  new String[] {"1"});
+        tmp.put("4",  new String[] {"2"});
+        TRUE_TRUE = Collections.unmodifiableMap(tmp);
+    } 
+    public static final Map<String, String[]> TRUE_FALSE; 
+    static{
+        Hashtable<String, String[]> tmp = new Hashtable<>();
+        tmp.put("1", new String[] {"a","f"});
+        tmp.put("2",  new String[] {"a","f"});
+        tmp.put("3",  new String[] {"b","g","h"});
+        tmp.put("4",  new String[] {"c","e","k"});
+        TRUE_FALSE = Collections.unmodifiableMap(tmp);
+    } 
+    public static final Map<String, String[]> FALSE_TRUE; 
+    static {
+        Hashtable<String, String[]> tmp = new Hashtable<>();
+        tmp.put("a", new String[] {"3","4"});
+        tmp.put("b",  new String[] {"2"});
+        tmp.put("c",  new String[] {"1"});
+        tmp.put("d",  new String[] {"3","4"});
+        tmp.put("e",  new String[] {"2"});
+        tmp.put("f",  new String[] {});
+        tmp.put("g",  new String[] {"1"});
+        tmp.put("h",  new String[] {});
+        tmp.put("i",  new String[] {"1"});
+        tmp.put("j",  new String[] {"2"});
+        tmp.put("k",  new String[] {});
+        tmp.put("l",  new String[] {});
+        FALSE_TRUE = Collections.unmodifiableMap(tmp);
+    }
+
+    public static final Map<String, String[]> FALSE_FALSE;
+    static {
+        Hashtable<String, String[]> tmp = new Hashtable<>(); 
+        tmp.put("a", new String[] {"a","f"});
+        tmp.put("b",  new String[] {"c","e","k"});
+        tmp.put("c",  new String[] {"b","g","h"});
+        tmp.put("d",  new String[] {"a","f"});
+        tmp.put("e",  new String[] {"c","e","k"});
+        tmp.put("f",  new String[] {"d","i","j","l"});
+        tmp.put("g",  new String[] {"b","g","h"});
+        tmp.put("h",  new String[] {"d","i","j","l"});
+        tmp.put("i",  new String[] {"b","g","h"});
+        tmp.put("j",  new String[] {"c","e","k"});
+        tmp.put("k",  new String[] {"d","i","j","l"});
+        tmp.put("l",  new String[] {"d","i","j","l"});
+        FALSE_FALSE = Collections.unmodifiableMap(tmp);
+    }
+
+    public static final Map<String, String[]> LEFT_RIGHT;
+    static {
+        Hashtable<String, String[]> tmp = new Hashtable<>();
+        tmp.put("1", new String[] {"2","4","a","e"});
+        tmp.put("2", new String[] {"1","b","d","j"});
+        tmp.put("3", new String[] {"2","4","a","e"});
+        tmp.put("4", new String[] {"3","c","f","k"});
+        tmp.put("a", new String[] {"2","4","a","e"});
+        tmp.put("b", new String[] {"3","c","f","k"});
+        tmp.put("c", new String[] {"1","b","d","j"});
+        tmp.put("d", new String[] {"1","b","d","j"});
+        tmp.put("e", new String[] {"g","h","i","l"});
+        tmp.put("f", new String[] {"3","c","f","k"});
+        tmp.put("g", new String[] {"2","4","a","e"});
+        tmp.put("h", new String[] {"3","c","f","k"});
+        tmp.put("i", new String[] {"1","b","d","j"});
+        tmp.put("j", new String[] {"g","h","i","l"});
+        tmp.put("k", new String[] {"g","h","i","l"});
+        tmp.put("l", new String[] {"g","h","i","l"});
+        LEFT_RIGHT = Collections.unmodifiableMap(tmp);
+    }
 
     public static int solution(boolean[][] g) {
-        // Your code here
-        // for (int i = 0; i < g.length; i++) {
-        //     System.out.println(Arrays.toString(g[i]));
-        // }
-        // System.out.println();
-        ArrayList<HashSet<ArrayList<String>>> setList = new ArrayList<>();
+
+        ArrayList<ArrayList<String>> setList = new ArrayList<>();
         for (int i = 0; i < g[0].length; i++) { // g[0].length
-            setList.add(new HashSet<ArrayList<String>>());
-            enumerateSinglePredecessors(g, setList, i, 0);
+            setList.add(new ArrayList<String>());
+            enumerateSinglePredecessors(g, setList.get(i), i, 0);
         }
-        // for (int i = 0; i < setList.size(); i++) {
-        //     System.out.println(setList.get(i).size());
-        // }
-        // for (ArrayList<ArrayList<Boolean>> bools: setList.get(1)) {
-        //     System.out.println(bools);
-        // }
-        // System.out.println(setList.get(0).size());
-        // System.out.println(setList.get(1).size());
-        // System.out.println(setList.get(2).size());
-        // for (HashSet<ArrayList<ArrayList<Boolean>>> set : setList) {
-        //     for (ArrayList<ArrayList<Boolean>> bools : set) {
-        //         System.out.println(bools);
-        //     }
-        //     System.out.println();
-        // }
-        // find valid grids
-        return findValidGrids();
+
+        return findValidGrids(setList, "", 0, g[0].length);
     }
 
-    public static int findValidGrids() {
-        return 1;
-        // if (lvl == len) {
-        //     return 1;
-        // } else {
-        //     int count = 0;
-        //     for (ArrayList<ArrayList<Boolean>> bigCol2 : setList.get(lvl)) {
-        //         // System.out.println(bigCol2);
-        //         if (isValidPair(bigCol, bigCol2)) {
-        //             count += findValidGrids(setList, bigCol2, lvl+1, len);
-        //         }
-        //     }
-
-        //     return count;
-        // }
+    public static int findValidGrids(ArrayList<ArrayList<String>> setList, String col, int colNum, int len) {
+        if (colNum == len) {
+            return 1;
+        } else {
+            int count = 0;
+            ArrayList<String> permutations = setList.get(colNum);
+            for (String col2 : permutations) {
+                if (isValidPair(col, col2)) {
+                    count += findValidGrids(setList, col2, colNum+1, len);
+                }
+            }
+            return count;
+        }
     }
 
-    public static boolean isValidPair(ArrayList<ArrayList<Boolean>> bigCol, ArrayList<ArrayList<Boolean>> bigCol2) {
-        if (bigCol.size() == 0) return true; // only true for first iteration
+    public static boolean isValidPair(String col, String col2) {
+        if (col.length() == 0) return true; // only true for first iteration
 
-        for (int i = 0; i < bigCol.size(); i++) {
-            if (bigCol.get(i).get(1) != bigCol2.get(i).get(0)) return false;
+        for (int i = 0; i < col.length(); i++) {
+            String grid1 = col.substring(i,i+1);
+            String grid2 = col2.substring(i,i+1);
+            if (!Arrays.asList(LEFT_RIGHT.get(grid1)).contains(grid2)) {
+                return false;
+            }
         }
 
         return true;
     }
 
-    // enumerate predecessors. (takes in graph)
-        // divide into 1 width cols and find all unique predecessors by col (takes in 1 width col)
-            // initialize bigger possible predecessor
-            // given single col now what? (takes in bigger predecessor col and 1 width col)     
-            // per col, enumerate by cell  
-        // function that handles it by rule
-        // function that handles by cell
-
-        // for (int i = 0; i < 4; i++) {
-        //     ArrayList<ArrayList<Boolean>> biggerColCopy = new ArrayList<>();
-        //     copyArrayList(biggerColCopy, biggerCol);
-        //     RuleSet.ruleGetter(i, col, biggerColCopy, lvl);
-        //     enumerateSinglePredecessors(col, lvl+1, s, biggerColCopy);
-        // }
-    // TODO add print statements
-    // element by element
-    // TODO FINISH THIS BOIIII
-    private static void enumerateSinglePredecessors(boolean[][] g, ArrayList<HashSet<ArrayList<String>>> setList, int colNum, int lvl) {
+    private static void enumerateSinglePredecessors(boolean[][] g, ArrayList<String> list, int colNum, int lvl) {
         if (lvl == 0) {
             // current state current level has gas, ALL TRUE STATES
-            if (g[colNum][lvl]) {
+            if (g[lvl][colNum]) {
                 for (String trueState : TRUE_TRUE.keySet()) {
-                    setList.get(colNum).add(new ArrayList<String>(Arrays.asList(trueState)));
-                    // System.out.println(setList.get(colNum));
+                    list.add(trueState);
                 }
-                System.out.println(setList.get(colNum));
-                enumerateSinglePredecessors(g, setList, colNum, lvl+1);
+                enumerateSinglePredecessors(g, list, colNum, lvl+1);
             // current state current level does not have gas, ALL FALSE STATES
             } else {
                 for (String falseState : FALSE_FALSE.keySet()) {
-                    setList.get(colNum).add(new ArrayList<String>(Arrays.asList(falseState)));
+                    list.add(falseState);
                 }
-                System.out.println(setList.get(colNum));
-                enumerateSinglePredecessors(g, setList, colNum, lvl+1);
+                enumerateSinglePredecessors(g, list, colNum, lvl+1);
             }
         } else if (lvl < g.length) {
-            if(g[colNum][lvl]) {
-                if (g[colNum][lvl-1]) {
-
+            int length = list.size();
+            if(g[lvl][colNum]) {
+                // TRUE_TRUE map
+                if (g[lvl-1][colNum]) {
+                    for (int i = 0; i < length; i++) {
+                        String s = list.get(0);
+                        String lastChar = s.substring(s.length() - 1, s.length());
+                        for (int j = 0; j < TRUE_TRUE.get(lastChar).length; j++) {
+                            String grid = s + TRUE_TRUE.get(lastChar)[j];
+                            list.add(grid);
+                        }
+                        list.remove(s);
+                    }
+                    enumerateSinglePredecessors(g, list, colNum, lvl+1);
+                    // FALSE_TRUE map
                 } else {
-
+                    for (int i = 0; i < length; i++) {
+                        String s = list.get(0);
+                        String lastChar = s.substring(s.length() - 1, s.length());
+                        for (int j = 0; j < FALSE_TRUE.get(lastChar).length; j++) {
+                            String grid = s + FALSE_TRUE.get(lastChar)[j];
+                            list.add(grid);
+                        }
+                        list.remove(s);
+                    }
+                    enumerateSinglePredecessors(g, list, colNum, lvl+1);
                 }
             } else {
-                if (g[colNum][lvl-1]) {
+                // TRUE_FALSE
+                if (g[lvl-1][colNum]) {
+                    for (int i = 0; i < length; i++) {
+                        String s = list.get(0);
+                        String lastChar = s.substring(s.length() - 1, s.length());
+                        for (int j = 0; j < TRUE_FALSE.get(lastChar).length; j++) {
+                            String grid = s + TRUE_FALSE.get(lastChar)[j];
+                            list.add(grid);
+                        }
+                        list.remove(s);
+                    }
+                    enumerateSinglePredecessors(g, list, colNum, lvl+1);
 
+                    // FALSE_FALSE
                 } else {
-                    
+                    for (int i = 0; i < length; i++) {
+                        String s = list.get(0);
+                        String lastChar = s.substring(s.length() - 1, s.length());
+                        for (int j = 0; j < FALSE_FALSE.get(lastChar).length; j++) {
+                            String grid = s + FALSE_FALSE.get(lastChar)[j];
+                            list.add(grid);
+                        }
+                        list.remove(s);
+                    }
+                    enumerateSinglePredecessors(g, list, colNum, lvl+1);
                 }
             }
-            enumerateSinglePredecessors(g, setList, colNum, lvl+1);
         }
-    }
-
-                // System.out.println("before: " + i);
-                // for (int j = 0; j < biggerCol.length; j++) {
-                //     System.out.println(Arrays.toString(biggerColCopy[j]));
-                // }
-                // System.out.println("After:");
-                // for (int j = 0; j < biggerCol.length; j++) {
-                //     System.out.println(Arrays.toString(biggerColCopy[j]));
-                // }
-
-    public static void fillEmptyBigCol(ArrayList<ArrayList<Boolean>> emptyBigCol, int len) {
-        for (int i = 0; i < len + 1; i++) {
-            emptyBigCol.add(new ArrayList<>());
-            for (int j = 0; j < 2; j++) {
-                emptyBigCol.get(i).add(false);
-            }
-        }
-        // System.out.println(emptyBigCol);
-    }
-
-    public static void copyArrayList(ArrayList<ArrayList<Boolean>> biggerColCopy, ArrayList<ArrayList<Boolean>> biggerCol) {
-        for (int i = 0; i < biggerCol.size(); i++) {
-            biggerColCopy.add(new ArrayList<Boolean>());
-            for (int j = 0; j < 2; j++) {
-                biggerColCopy.get(i).add(biggerCol.get(i).get(j));
-            }
-        }
-    }
-
-    public static void fillColCore(boolean[] biggerCol, boolean[] smallerCol) {
-        for (int i = 0; i < smallerCol.length; i++) {
-            biggerCol[i + 1] = smallerCol[i];
-        }
-    }
-
-    private static ArrayList<Boolean> fillSingleColFromGraph(boolean[][] g, int j) {
-        ArrayList<Boolean> col = new ArrayList<Boolean>();
-        for (int i = 0; i < g.length; i++) {
-            col.add(g[i][j]);
-        }
-        return col;
     }
 }
