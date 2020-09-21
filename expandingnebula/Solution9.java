@@ -2,6 +2,8 @@ package expandingnebula;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Map;
@@ -107,15 +109,28 @@ public class Solution9 {
     public static int solution(boolean[][] g) {
 
         ArrayList<ArrayList<String>> setList = new ArrayList<>();
+        // System.out.println(g[0].length);
         for (int i = 0; i < g[0].length; i++) { // g[0].length
             setList.add(new ArrayList<String>());
-            enumerateSinglePredecessors(g, setList.get(i), i, 0);
+            enumerateSinglePredecessors(g, setList, setList.get(i), i, 0);
         }
 
-        return findValidGrids(setList, "", 0, g[0].length);
+        for (ArrayList<String> list : setList) {
+            System.out.println(list.size());
+        }
+
+        // for (ArrayList<String> list : setList) {
+        //     for (String grid : list) {
+        //      System.out.print(grid + " ");   
+        //     }
+        //     System.out.println();
+        // }
+        HashMap<String, HashSet<String>> map = new HashMap<String, HashSet<String>>();
+
+        return findValidGrids(setList, "", 0, g[0].length, map);
     }
 
-    public static int findValidGrids(ArrayList<ArrayList<String>> setList, String col, int colNum, int len) {
+    public static int findValidGrids(ArrayList<ArrayList<String>> setList, String col, int colNum, int len, Map<String, HashSet<String>> map) {
         if (colNum == len) {
             return 1;
         } else {
@@ -123,9 +138,10 @@ public class Solution9 {
             ArrayList<String> permutations = setList.get(colNum);
             for (String col2 : permutations) {
                 if (isValidPair(col, col2)) {
-                    count += findValidGrids(setList, col2, colNum+1, len);
+                    count += findValidGrids(setList, col2, colNum+1, len, map);   
                 }
             }
+            System.out.println(count);
             return count;
         }
     }
@@ -144,77 +160,93 @@ public class Solution9 {
         return true;
     }
 
-    private static void enumerateSinglePredecessors(boolean[][] g, ArrayList<String> list, int colNum, int lvl) {
-        if (lvl == 0) {
-            // current state current level has gas, ALL TRUE STATES
-            if (g[lvl][colNum]) {
-                for (String trueState : TRUE_TRUE.keySet()) {
-                    list.add(trueState);
-                }
-                enumerateSinglePredecessors(g, list, colNum, lvl+1);
-            // current state current level does not have gas, ALL FALSE STATES
-            } else {
-                for (String falseState : FALSE_FALSE.keySet()) {
-                    list.add(falseState);
-                }
-                enumerateSinglePredecessors(g, list, colNum, lvl+1);
-            }
-        } else if (lvl < g.length) {
-            int length = list.size();
-            if(g[lvl][colNum]) {
-                // TRUE_TRUE map
-                if (g[lvl-1][colNum]) {
-                    for (int i = 0; i < length; i++) {
-                        String s = list.get(0);
-                        String lastChar = s.substring(s.length() - 1, s.length());
-                        for (int j = 0; j < TRUE_TRUE.get(lastChar).length; j++) {
-                            String grid = s + TRUE_TRUE.get(lastChar)[j];
-                            list.add(grid);
-                        }
-                        list.remove(s);
+    private static void enumerateSinglePredecessors(boolean[][] g, ArrayList<ArrayList<String>> setList, ArrayList<String> list, int colNum, int lvl) {
+        int prevCol = previousCol(g, colNum);
+        if (prevCol != -1) {
+            list.addAll(setList.get(prevCol));
+        } else {
+            if (lvl == 0) {
+                // current state current level has gas, ALL TRUE STATES
+                if (g[lvl][colNum]) {
+                    for (String trueState : TRUE_TRUE.keySet()) {
+                        list.add(trueState);
                     }
-                    enumerateSinglePredecessors(g, list, colNum, lvl+1);
-                    // FALSE_TRUE map
+                    enumerateSinglePredecessors(g, setList, list, colNum, lvl+1);
+                // current state current level does not have gas, ALL FALSE STATES
                 } else {
-                    for (int i = 0; i < length; i++) {
-                        String s = list.get(0);
-                        String lastChar = s.substring(s.length() - 1, s.length());
-                        for (int j = 0; j < FALSE_TRUE.get(lastChar).length; j++) {
-                            String grid = s + FALSE_TRUE.get(lastChar)[j];
-                            list.add(grid);
-                        }
-                        list.remove(s);
+                    for (String falseState : FALSE_FALSE.keySet()) {
+                        list.add(falseState);
                     }
-                    enumerateSinglePredecessors(g, list, colNum, lvl+1);
+                    enumerateSinglePredecessors(g, setList, list, colNum, lvl+1);
                 }
-            } else {
-                // TRUE_FALSE
-                if (g[lvl-1][colNum]) {
-                    for (int i = 0; i < length; i++) {
-                        String s = list.get(0);
-                        String lastChar = s.substring(s.length() - 1, s.length());
-                        for (int j = 0; j < TRUE_FALSE.get(lastChar).length; j++) {
-                            String grid = s + TRUE_FALSE.get(lastChar)[j];
-                            list.add(grid);
+            } else if (lvl < g.length) {
+                int length = list.size();
+                if(g[lvl][colNum]) {
+                    // TRUE_TRUE map
+                    if (g[lvl-1][colNum]) {
+                        for (int i = 0; i < length; i++) {
+                            String s = list.get(0);
+                            String lastChar = s.substring(s.length() - 1, s.length());
+                            for (int j = 0; j < TRUE_TRUE.get(lastChar).length; j++) {
+                                String grid = s + TRUE_TRUE.get(lastChar)[j];
+                                list.add(grid);
+                            }
+                            list.remove(s);
                         }
-                        list.remove(s);
+                        enumerateSinglePredecessors(g, setList, list, colNum, lvl+1);
+                        // FALSE_TRUE map
+                    } else {
+                        for (int i = 0; i < length; i++) {
+                            String s = list.get(0);
+                            String lastChar = s.substring(s.length() - 1, s.length());
+                            for (int j = 0; j < FALSE_TRUE.get(lastChar).length; j++) {
+                                String grid = s + FALSE_TRUE.get(lastChar)[j];
+                                list.add(grid);
+                            }
+                            list.remove(s);
+                        }
+                        enumerateSinglePredecessors(g, setList, list, colNum, lvl+1);
                     }
-                    enumerateSinglePredecessors(g, list, colNum, lvl+1);
-
-                    // FALSE_FALSE
                 } else {
-                    for (int i = 0; i < length; i++) {
-                        String s = list.get(0);
-                        String lastChar = s.substring(s.length() - 1, s.length());
-                        for (int j = 0; j < FALSE_FALSE.get(lastChar).length; j++) {
-                            String grid = s + FALSE_FALSE.get(lastChar)[j];
-                            list.add(grid);
+                    // TRUE_FALSE
+                    if (g[lvl-1][colNum]) {
+                        for (int i = 0; i < length; i++) {
+                            String s = list.get(0);
+                            String lastChar = s.substring(s.length() - 1, s.length());
+                            for (int j = 0; j < TRUE_FALSE.get(lastChar).length; j++) {
+                                String grid = s + TRUE_FALSE.get(lastChar)[j];
+                                list.add(grid);
+                            }
+                            list.remove(s);
                         }
-                        list.remove(s);
+                        enumerateSinglePredecessors(g, setList, list, colNum, lvl+1);
+    
+                        // FALSE_FALSE
+                    } else {
+                        for (int i = 0; i < length; i++) {
+                            String s = list.get(0);
+                            String lastChar = s.substring(s.length() - 1, s.length());
+                            for (int j = 0; j < FALSE_FALSE.get(lastChar).length; j++) {
+                                String grid = s + FALSE_FALSE.get(lastChar)[j];
+                                list.add(grid);
+                            }
+                            list.remove(s);
+                        }
+                        enumerateSinglePredecessors(g, setList, list, colNum, lvl+1);
                     }
-                    enumerateSinglePredecessors(g, list, colNum, lvl+1);
                 }
             }
         }
+    }
+
+    public static int previousCol(boolean[][] g, int colNum) {
+        for (int i = 0; i < colNum; i++) {
+            boolean equalCols = true;
+            for (int j = 0; j < g.length; j++) {
+                if (g[j][i] != g[j][colNum]) equalCols = false;
+            }
+            if (equalCols) return i;
+        } 
+        return -1;
     }
 }
