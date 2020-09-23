@@ -128,9 +128,9 @@ public class Solution09 {
         // for (int i = 0; i < setList.size(); i++) {
         //     System.out.println(setList.get(i).size());
         // }
-        for (ArrayList<ArrayList<Boolean>> bools: setList.get(1)) {
-            System.out.println(bools);
-        }
+        // for (ArrayList<ArrayList<Boolean>> bools: setList.get(1)) {
+        //     System.out.println(bools);
+        // }
         // System.out.println(setList.get(0).size());
         // System.out.println(setList.get(1).size());
         // System.out.println(setList.get(2).size());
@@ -150,7 +150,12 @@ public class Solution09 {
             return 1;
         } else {
             int count = 0;
+            int i = 0;
             for (ArrayList<ArrayList<Boolean>> bigCol2 : setList.get(lvl)) {
+                if (lvl == 0) {
+                    System.out.println(i);
+                    i++;
+                }
                 // System.out.println(bigCol2);
                 if (isValidPair(bigCol, bigCol2)) {
                     count += findValidGrids(setList, bigCol2, lvl+1, len);

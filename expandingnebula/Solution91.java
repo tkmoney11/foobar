@@ -115,9 +115,9 @@ public class Solution91 {
             enumerateSinglePredecessors(g, setList, setList.get(i), i, 0);
         }
 
-        for (ArrayList<String> list : setList) {
-            System.out.println(list.size());
-        }
+        // for (ArrayList<String> list : setList) {
+        //     System.out.println(list.size());
+        // }
 
         // for (ArrayList<String> list : setList) {
         //     for (String grid : list) {
@@ -136,12 +136,16 @@ public class Solution91 {
         } else {
             int count = 0;
             ArrayList<String> permutations = setList.get(colNum);
+            int i = 0;
             for (String col2 : permutations) {
+                if (colNum == 0) {
+                    System.out.println(i);
+                    i++;
+                }
                 if (isValidPair(col, col2)) {
                     count += findValidGrids(setList, col2, colNum+1, len, map);   
                 }
             }
-            System.out.println(count);
             return count;
         }
     }

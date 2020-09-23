@@ -114,10 +114,10 @@ public class Solution92 {
             setList.add(new ArrayList<String>());
             enumerateSinglePredecessors(g, setList, setList.get(i), i, 0);
         }
-        System.out.println("done");
-        // for (ArrayList<String> list : setList) {
-        //     System.out.println(list.size());
-        // }
+        // System.out.println("done");
+        for (ArrayList<String> list : setList) {
+            System.out.println(list.size());
+        }
 
         // for (ArrayList<String> list : setList) {
         //     for (String grid : list) {
