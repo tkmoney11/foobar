@@ -114,10 +114,10 @@ public class Solution9 {
             setList.add(new ArrayList<String>());
             enumerateSinglePredecessors(g, setList, setList.get(i), i, 0);
         }
-
-        for (ArrayList<String> list : setList) {
-            System.out.println(list.size());
-        }
+        System.out.println("done");
+        // for (ArrayList<String> list : setList) {
+        //     System.out.println(list.size());
+        // }
 
         // for (ArrayList<String> list : setList) {
         //     for (String grid : list) {
@@ -125,25 +125,84 @@ public class Solution9 {
         //     }
         //     System.out.println();
         // }
-        HashMap<String, HashSet<String>> map = new HashMap<String, HashSet<String>>();
-
-        return findValidGrids(setList, "", 0, g[0].length, map);
+        // HashMap<String, HashSet<String>> map = new HashMap<String, HashSet<String>>();
+        HashMap<Integer, ArrayList<HashMap<String, Integer>>> validPaths = new HashMap<Integer, ArrayList<HashMap<String, Integer>>>();
+        return findValidGrids(setList, "", 0, g[0].length, validPaths);
     }
 
-    public static int findValidGrids(ArrayList<ArrayList<String>> setList, String col, int colNum, int len, Map<String, HashSet<String>> map) {
-        if (colNum == len) {
+    public static int findValidGrids(ArrayList<ArrayList<String>> setList, String col, int colNum, int len, Map<Integer, ArrayList<HashMap<String, Integer>>> map) {
+        // System.out.println(map);
+        // System.out.println(colNum);
+        // System.out.println(col);
+        // System.out.println("~~~~~~~~~");
+        if (map.containsKey(colNum) && containsMap(map.get(colNum), col)) {
+            // TODO if Map has path.
+            // System.out.println("HEREREREREREREREREREREREREREREERERERER");
+            for (int i = 0 ; i < map.get(colNum).size(); i++) {
+                if (map.get(colNum).get(i).containsKey(col)) return map.get(colNum).get(i).get(col);
+            }
+            return -1;
+        } else if (colNum == len) {
             return 1;
         } else {
             int count = 0;
             ArrayList<String> permutations = setList.get(colNum);
             for (String col2 : permutations) {
                 if (isValidPair(col, col2)) {
-                    count += findValidGrids(setList, col2, colNum+1, len, map);   
+                    int prevCount = count;
+                    count += findValidGrids(setList, col2, colNum+1, len, map); 
+                    // TODO do dis pls
+                    // returns increases in the count of valid grids  
+                    if (count > prevCount) {
+                        // System.out.println("yeah\n");
+                        // System.out.println("colNum: " + colNum + " count: " + (count - prevCount));
+                        // TODO v1 is done here I think
+                        if (!map.containsKey(colNum+1)) {
+                            // System.out.println("map doesn't contain colNum");
+                            // System.out.println(map);
+                            // System.out.println();
+                            ArrayList<HashMap<String, Integer>> tmp = new ArrayList<>();
+                            HashMap<String, Integer> tmpMap = new HashMap<>();
+                            tmpMap.put(col2, (count - prevCount));
+                            tmp.add(tmpMap);
+                            map.put(colNum+1, tmp);
+                        } else {
+                            if (!containsMap(map.get(colNum+1), col2)) {
+                                // System.out.println("map contains colNum but not col2");
+                                // System.out.println(map);
+                                // System.out.println();
+                                // System.out.println("dicey1");
+                                ArrayList<HashMap<String, Integer>> tmp = map.get(colNum+1);
+                                HashMap<String, Integer> tmpMap = new HashMap<>();
+                                tmpMap.put(col2, (count - prevCount));
+                                tmp.add(tmpMap);
+                                map.put(colNum+1, tmp);
+                            
+                            } 
+                            // else {
+                                // System.out.println("map contains colNum and col2???");
+                                // System.out.println(map);
+                                // System.out.println();
+                                // System.out.println("dicey2");
+                                // ArrayList<HashMap<String, Integer>> tmp = map.get(colNum);
+                                // HashMap<String, Integer> tmp = map.get(colNum);
+                                // tmp.put(col2, tmp.get(col2) + (count - prevCount));
+                                // map.put(colNum, tmp);
+                            // }
+                        }
+                    }
                 }
             }
-            System.out.println(count);
+            // System.out.println(count);
             return count;
         }
+    }
+
+    public static boolean containsMap(ArrayList<HashMap<String, Integer>> list, String col) {
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i).containsKey(col)) return true;
+        }
+        return false;
     }
 
     public static boolean isValidPair(String col, String col2) {
