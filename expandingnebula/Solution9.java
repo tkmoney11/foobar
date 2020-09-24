@@ -75,13 +75,6 @@ public class Solution9 {
     } 
 
     public static int solution(boolean[][] g) {
-        // for (int i = 0; i < g[0].length; i++) {
-        //     // enumerate single Column Predecessors as binary cols
-        //     // iteration 1:
-        //     HashMap<int, int> finalProduct = new HashMap<>();
-        // }
-        // print column predecessors
-        // System.out.println(Arrays.equals(new int[] {-1, 0}, new int[] {-1, 0}));
         ArrayList<HashMap<Integer, Integer>> predecessorList = new ArrayList<>();
         for (int i = 0; i < g[0].length; i++) {
             HashMap<Integer, Integer> previousMap;
@@ -93,7 +86,6 @@ public class Solution9 {
             HashMap<Integer, Integer> map = new HashMap<>();
             enumerate(g, new int[] {0, 0}, i, 0, g.length, map, previousMap);
             predecessorList.add(map);
-            // System.out.println("\ni\n");
         }
         return countAll(predecessorList.get(g[0].length - 1));
     }
@@ -125,19 +117,13 @@ public class Solution9 {
                 // map has key, but previous map makes inelligible
                 if (previousMap.containsKey(predecessorCols[0]) || previousMap.size() == 0) {
                     if (previousMap.size() > 0) {
-                        // System.out.println(Arrays.toString(predecessorCols));
-                        // System.out.println(map.get(predecessorCols[1]));
-                        // System.out.println(previousMap.get(predecessorCols[0]));
                         map.put(predecessorCols[1], map.get(predecessorCols[1]) + previousMap.get(predecessorCols[0]));
                     } else {
-                        // System.out.println("heh");
-                        // System.out.println(Arrays.toString(predecessorCols));
                         map.put(predecessorCols[1], map.get(predecessorCols[1]) + 1);
                     }
                 // map has key, but previous map makes elligible
                 } 
             }
-            // System.out.println(Arrays.toString(predecessorCols));
         } else {
             if (lvl == 0) {
                 // current state, current level has gas, ALL TRUE STATES
@@ -146,7 +132,6 @@ public class Solution9 {
                         int[] colCopy = new int[2];
                         colCopy[0] = Character.getNumericValue(key.charAt(0));
                         colCopy[1] = Character.getNumericValue(key.charAt(1));
-                        // System.out.println(Arrays.toString(key) + " " + Arrays.toString(predecessors[i]));
                         enumerate(g, colCopy, colNum, lvl+1, len, map, previousMap);
                     }
                 // current state, current level does not have gas, ALL FALSE STATES
@@ -155,7 +140,6 @@ public class Solution9 {
                         int[] colCopy = new int[2];
                         colCopy[0] = Character.getNumericValue(key.charAt(0));
                         colCopy[1] = Character.getNumericValue(key.charAt(1));
-                        // System.out.println(Arrays.toString(key) + " " + Arrays.toString(predecessors[i]));
                         enumerate(g, colCopy, colNum, lvl+1, len, map, previousMap);
                     }
                 }
@@ -163,112 +147,74 @@ public class Solution9 {
                 if (g[lvl][colNum]) {
                     // TRUE_TRUE
                     if (g[lvl-1][colNum]) {
-                        // System.out.println("true_true");
                         int[] tmp = new int[2];
                         tmp[0] = predecessorCols[0];
                         tmp[1] = predecessorCols[1];
-                        // System.out.println("lvl: " + lvl);
-                        // System.out.println(Arrays.toString(predecessorCols));
                         predecessorCols[0] >>= lvl-1;
                         predecessorCols[1] >>= lvl-1;
                         String tmpKey = "" + predecessorCols[0] + predecessorCols[1];
-                        // System.out.println(tmpKey);
                         for (int[] grid : TRUE_TRUE.get(tmpKey)) {
                             // TODO ERROR IN GRID. REFERENCING CHANGES. COPY GRID AND SHIFT
                             int[] gridCopy = createColCopy(grid);
-                            // System.out.println("grid before: " + Arrays.toString(gridCopy));
                             gridCopy[0] <<= lvl;
                             gridCopy[1] <<= lvl;
-                            // System.out.println("grid after: " + Arrays.toString(gridCopy));
                             int[] colCopy = createColCopy(tmp);
-                            // System.out.println("colCopy: " + Arrays.toString(colCopy));
                             colCopy[0] |= gridCopy[0];
                             colCopy[1] |= gridCopy[1];
-                            // System.out.println("colCopy: " + Arrays.toString(colCopy));
-                            // System.out.println();
                             enumerate(g, colCopy, colNum, lvl+1, len, map, previousMap);
                         }
                     // FALSE_TRUE
                     } else {
-                        // System.out.println("FALSE_TRUE");
                         int[] tmp = new int[2];
                         tmp[0] = predecessorCols[0];
                         tmp[1] = predecessorCols[1];
-                        // System.out.println("lvl: " + lvl);
-                        // System.out.println(Arrays.toString(predecessorCols));
                         predecessorCols[0] >>= lvl-1;
                         predecessorCols[1] >>= lvl-1;
                         String tmpKey = "" + predecessorCols[0] + predecessorCols[1];
-                        // System.out.println(tmpKey);
                         for (int[] grid : FALSE_TRUE.get(tmpKey)) {
                             // TODO ERROR IN GRID. REFERENCING CHANGES. COPY GRID AND SHIFT
                             int[] gridCopy = createColCopy(grid);
-                            // System.out.println("grid before: " + Arrays.toString(gridCopy));
                             gridCopy[0] <<= lvl;
                             gridCopy[1] <<= lvl;
-                            // System.out.println("grid after: " + Arrays.toString(gridCopy));
                             int[] colCopy = createColCopy(tmp);
-                            // System.out.println("colCopy: " + Arrays.toString(colCopy));
                             colCopy[0] |= gridCopy[0];
                             colCopy[1] |= gridCopy[1];
-                            // System.out.println("colCopy: " + Arrays.toString(colCopy));
-                            // System.out.println();
                             enumerate(g, colCopy, colNum, lvl+1, len, map, previousMap);
                         }
                     }
                 } else {
                     // TRUE_FALSE
                     if (g[lvl-1][colNum]) {
-                        // System.out.println("TRUE_FALSE");
                         int[] tmp = new int[2];
                         tmp [0] = predecessorCols[0];
                         tmp [1] = predecessorCols[1];
-                        // System.out.println("lvl: " + lvl);
-                        // System.out.println(Arrays.toString(predecessorCols));
                         predecessorCols[0] >>= lvl-1;
                         predecessorCols[1] >>= lvl-1;
                         String tmpKey = "" + predecessorCols[0] + predecessorCols[1];
-                        // System.out.println(tmpKey);
                         for (int[] grid : TRUE_FALSE.get(tmpKey)) {
-                            // System.out.println("grid before: " + Arrays.toString(grid));
-                            // TODO ERROR IN GRID. REFERENCING CHANGES. COPY GRID AND SHIFT
                             int[] gridCopy = createColCopy(grid);
                             gridCopy[0] <<= lvl;
                             gridCopy[1] <<= lvl;
-                            // System.out.println("grid after: " + Arrays.toString(grid));
                             int[] colCopy = createColCopy(tmp);
-                            // System.out.println("colCopy: " + Arrays.toString(colCopy));
                             colCopy[0] |= gridCopy[0];
                             colCopy[1] |= gridCopy[1];
-                            // System.out.println("colCopy: " + Arrays.toString(colCopy));
-                            // System.out.println();
                             enumerate(g, colCopy, colNum, lvl+1, len, map, previousMap);
                         }
                     // FALSE_FALSE
                     } else {
-                        // System.out.println("FALSE_FALSE");
                         int[] tmp = new int[2];
                         tmp[0] = predecessorCols[0];
                         tmp[1] = predecessorCols[1];
-                        // System.out.println("lvl: " + lvl);
-                        // System.out.println(Arrays.toString(predecessorCols));
                         predecessorCols[0] >>= lvl-1;
                         predecessorCols[1] >>= lvl-1;
                         String tmpKey = "" + predecessorCols[0] + predecessorCols[1];
-                        // System.out.println(tmpKey);
                         for (int[] grid : FALSE_FALSE.get(tmpKey)) {
-                            // TODO ERROR IN GRID. REFERENCING CHANGES. COPY GRID AND SHIFT
                             int[] gridCopy = createColCopy(grid);
-                            // System.out.println("grid before: " + Arrays.toString(gridCopy));
                             gridCopy[0] <<= lvl;
                             gridCopy[1] <<= lvl;
-                            // System.out.println("grid after: " + Arrays.toString(gridCopy));
                             int[] colCopy = createColCopy(tmp);
-                            // System.out.println("colCopy: " + Arrays.toString(colCopy));
                             colCopy[0] |= gridCopy[0];
                             colCopy[1] |= gridCopy[1];
-                            // System.out.println("colCopy: " + Arrays.toString(colCopy));
-                            // System.out.println();
                             enumerate(g, colCopy, colNum, lvl+1, len, map, previousMap);
                         }
                     }
