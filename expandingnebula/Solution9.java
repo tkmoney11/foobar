@@ -12,9 +12,12 @@ public class Solution9 {
     //      enumerate single column predecessors
     //      validate grids using predecessor columns
     // Improvements:
-    //      represent 1-width columns with binary
+    //      represent 1-width column column predecessors as binary
     //      cols and number of predecessors will be stored on a row by row basis
-    //      validation can be
+    //      validation can be done as we fill out column predecessors:
+    //          Instead of storing each individual column predecessor, only store counts of rightmost column in predecessor columns
+    //      
+    // Contact tkmoney11 for further details
     public static final Map<String, int[][]> TRUE_TRUE; 
     static{
         Hashtable<String, int[][]> tmp = new Hashtable<>();
