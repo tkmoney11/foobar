@@ -24,8 +24,8 @@ public class Solution9 {
         Hashtable<String, int[][]> tmp = new Hashtable<>();
         tmp.put("10", new int[][] {{0, 2}, {2, 0}});
         tmp.put("01", new int[][] {{0, 2}, {2, 0}});
-        tmp.put("20", new int[][] {{0, 1}, {1, 0}});
-        tmp.put("02", new int[][] {{1, 0}, {0, 1}});
+        tmp.put("20", new int[][] {{1, 0}});
+        tmp.put("02", new int[][] {{0, 1}});
         TRUE_TRUE = Collections.unmodifiableMap(tmp);
     }
 
@@ -173,7 +173,7 @@ public class Solution9 {
                         predecessorCols[0] >>= lvl-1;
                         predecessorCols[1] >>= lvl-1;
                         String tmpKey = "" + predecessorCols[0] + predecessorCols[1];
-                        System.out.println(tmpKey);
+                        // System.out.println(tmpKey);
                         for (int[] grid : TRUE_TRUE.get(tmpKey)) {
                             // TODO ERROR IN GRID. REFERENCING CHANGES. COPY GRID AND SHIFT
                             int[] gridCopy = createColCopy(grid);
