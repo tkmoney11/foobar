@@ -121,10 +121,12 @@ public class Solution09 {
         }
         ArrayList<ArrayList<Boolean>> emptyBigCol = new ArrayList<>();
         fillEmptyBigCol(emptyBigCol, g.length);
-        for (int i = 1; i < 2; i++) { // g[0].length
+        for (int i = 0; i < g[0].length; i++) { // g[0].length
+            System.out.println(i);
             ArrayList<Boolean> col = fillSingleColFromGraph(g, i);
             enumerateSinglePredecessors(col, 0, setList.get(i), emptyBigCol);
         }
+        // System.out.println("done");
         // for (int i = 0; i < setList.size(); i++) {
         //     System.out.println(setList.get(i).size());
         // }
@@ -152,10 +154,10 @@ public class Solution09 {
             int count = 0;
             int i = 0;
             for (ArrayList<ArrayList<Boolean>> bigCol2 : setList.get(lvl)) {
-                if (lvl == 0) {
-                    System.out.println(i);
-                    i++;
-                }
+                // if (lvl == 0) {
+                //     System.out.println(i);
+                //     i++;
+                // }
                 // System.out.println(bigCol2);
                 if (isValidPair(bigCol, bigCol2)) {
                     count += findValidGrids(setList, bigCol2, lvl+1, len);
