@@ -154,7 +154,6 @@ public class Solution9 {
                         predecessorCols[1] >>= lvl-1;
                         String tmpKey = "" + predecessorCols[0] + predecessorCols[1];
                         for (int[] grid : TRUE_TRUE.get(tmpKey)) {
-                            // TODO ERROR IN GRID. REFERENCING CHANGES. COPY GRID AND SHIFT
                             int[] gridCopy = createColCopy(grid);
                             gridCopy[0] <<= lvl;
                             gridCopy[1] <<= lvl;
@@ -172,7 +171,6 @@ public class Solution9 {
                         predecessorCols[1] >>= lvl-1;
                         String tmpKey = "" + predecessorCols[0] + predecessorCols[1];
                         for (int[] grid : FALSE_TRUE.get(tmpKey)) {
-                            // TODO ERROR IN GRID. REFERENCING CHANGES. COPY GRID AND SHIFT
                             int[] gridCopy = createColCopy(grid);
                             gridCopy[0] <<= lvl;
                             gridCopy[1] <<= lvl;
