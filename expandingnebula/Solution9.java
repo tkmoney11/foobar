@@ -1,14 +1,10 @@
 package expandingnebula;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Map;
-
-import javax.swing.plaf.synth.SynthSplitPaneUI;
 
 public class Solution9 {
     // v4
@@ -18,7 +14,7 @@ public class Solution9 {
     // Improvements:
     //      represent 1-width columns with binary
     //      cols and number of predecessors will be stored on a row by row basis
-    
+    //      validation can be
     public static final Map<String, int[][]> TRUE_TRUE; 
     static{
         Hashtable<String, int[][]> tmp = new Hashtable<>();
